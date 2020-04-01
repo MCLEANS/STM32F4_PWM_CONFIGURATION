@@ -20,9 +20,11 @@ private:
 
 	uint16_t prescaler;
 	uint16_t auto_reload_value;
-	uint16_t duty_cycle;
+	uint16_t duty_cycle = 0;
 
 private:
+	void enable_TIMER_RCC(TIM_TypeDef *TIMER);
+	void enable_GPIO_RCC(GPIO_TypeDef *PORT);
 public:
 public:
 
