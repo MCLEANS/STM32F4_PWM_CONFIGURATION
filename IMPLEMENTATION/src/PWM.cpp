@@ -101,9 +101,6 @@ void PWM::set_duty_cycle(uint16_t duty_cycle){
 		if(input_channel == channel4) TIMER->CCR4 = this->duty_cycle;
 	}
 
-
-
-
 }
 
 uint16_t PWM::get_duty_cycle(void) const{
