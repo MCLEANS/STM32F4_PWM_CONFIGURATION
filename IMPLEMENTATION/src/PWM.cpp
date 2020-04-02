@@ -55,9 +55,6 @@ PWM::PWM(TIM_TypeDef *TIMER,
 	PORT->MODER |= (1 << (PIN*2));
 	PORT->MODER |= (1 << ((PIN*2)+1));
 
-	//Set the specific alternate Function
-
-
 
 }
 
@@ -205,6 +202,57 @@ void PWM::set_alternate_function(alternate_function pin_alternate_function){
 			PORT->AFR[1] |= (1<<((PIN*4)+2));
 			PORT->AFR[1] |= (1<<((PIN*4)+3));
 			}
+
+}
+
+void PWM::begin(){
+	//set to PWM Mode
+	if(input_channel == channel1){
+		TIMER->CCMR1 &= ~(TIM_CCMR1_OC1M_0);
+		TIMER->CCMR1 |= TIM_CCMR1_OC1M_1;
+		TIMER->CCMR1 |= TIM_CCMR1_OC1M_2;
+		//Set output compare preload enable
+		TIMER->CCMR1 |= TIM_CCMR1_OC1PE;
+		//Enable capture/compare output
+		TIMER->CCER |= TIM_CCER_CC1E;
+	}
+
+	if(input_channel == channel2){
+		TIMER->CCMR1 &= ~(TIM_CCMR1_OC2M_0);
+		TIMER->CCMR1 |= TIM_CCMR1_OC2M_1;
+		TIMER->CCMR1 |= TIM_CCMR1_OC2M_2;
+		TIMER->CCMR1 |= TIM_CCMR1_OC2PE;
+		//Enable capture/compare output
+		TIMER->CCER |= TIM_CCER_CC2E;
+	}
+
+	if(input_channel == channel3){
+		TIMER->CCMR2 &= ~(TIM_CCMR2_OC3M_0);
+		TIMER->CCMR2 |= TIM_CCMR2_OC3M_1;
+		TIMER->CCMR2 |= TIM_CCMR2_OC3M_2;
+		TIMER->CCMR2 |= TIM_CCMR2_OC3PE;
+		//Enable capture/compare output
+		TIMER->CCER |= TIM_CCER_CC3E;
+	}
+
+	if(input_channel == channel4){
+		TIMER->CCMR2 &= ~(TIM_CCMR2_OC4M_0);
+		TIMER->CCMR2 |= TIM_CCMR2_OC4M_1;
+		TIMER->CCMR2 |= TIM_CCMR2_OC4M_2;
+		TIMER->CCMR2 |= TIM_CCMR2_OC4PE;
+		//Enable capture/compare output
+		TIMER->CCER |= TIM_CCER_CC4E;
+	}
+
+
+
+
+	//set main Output Enable
+	TIMER->BDTR |= TIM_BDTR_MOE;
+	//Enable the UG bit to update preload register
+	TIMER->EGR |= TIM_EGR_UG;
+	//Enable timer
+	TIMER->CR1 |= TIM_CR1_CEN;
 
 }
 
