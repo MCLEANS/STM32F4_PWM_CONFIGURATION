@@ -19,6 +19,10 @@ enum channel{
 	channel4
 };
 
+enum alternate_function{
+	AF0,AF1,AF2,AF3,AF4,AF5,AF6,AF7,AF8,AF9,AF10,AF11,AF12,AF13,AF14,AF15
+};
+
 class PWM {
 private:
 	TIM_TypeDef *TIMER;
@@ -45,6 +49,7 @@ public:
 	uint16_t get_auto_reload_value(void) const;
 	void set_duty_cycle(uint16_t);
 	uint16_t get_duty_cycle(void) const;
+	void set_alternate_function(alternate_function pin_alternate_function);
 };
 
 } /* namespace custom_libraries */
