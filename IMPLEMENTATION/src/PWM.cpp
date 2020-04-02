@@ -62,8 +62,12 @@ PWM::PWM(TIM_TypeDef *TIMER,
 }
 
 void PWM::set_prescaler(uint16_t prescaler){
-	this->prescaler = prescaler;
-	if(prescaler != this->prescaler) TIMER->PSC = this->prescaler;
+
+	if(prescaler != this->prescaler){
+		this->prescaler = prescaler;
+		TIMER->PSC = this->prescaler;
+	}
+
 
 }
 
@@ -73,8 +77,13 @@ uint16_t PWM::get_prescaler(void)const{
 }
 
 void PWM::set_auto_reload_value(uint16_t auto_reload_value){
-	this->auto_reload_value = auto_reload_value;
-	if(auto_reload_value != auto_reload_value) TIMER->ARR = this->auto_reload_value;
+
+	if(auto_reload_value != this->auto_reload_value) {
+		this->auto_reload_value = auto_reload_value;
+		TIMER->ARR = this->auto_reload_value;
+	}
+
+
 }
 
 uint16_t PWM::get_auto_reload_value(void) const{
@@ -82,7 +91,19 @@ uint16_t PWM::get_auto_reload_value(void) const{
 }
 
 void PWM::set_duty_cycle(uint16_t duty_cycle){
-	this->duty_cycle = duty_cycle;
+
+	if(duty_cycle != this->duty_cycle){
+		this->duty_cycle = duty_cycle;
+
+		if(input_channel == channel1) TIMER->CCR1 = this->duty_cycle;
+		if(input_channel == channel2) TIMER->CCR2 = this->duty_cycle;
+		if(input_channel == channel3) TIMER->CCR3 = this->duty_cycle;
+		if(input_channel == channel4) TIMER->CCR4 = this->duty_cycle;
+	}
+
+
+
+
 }
 
 uint16_t PWM::get_duty_cycle(void) const{
@@ -146,49 +167,51 @@ void PWM::set_alternate_function(alternate_function pin_alternate_function){
 			PORT->AFR[1] |= (1<<((PIN*4)+3));
 		}
 	if(pin_alternate_function == AF9) {
-				PORT->AFR[1] |= (1<<(PIN*4));
-				PORT->AFR[1] &= ~(1<<((PIN*4)+1));
-				PORT->AFR[1] &= ~(1<<((PIN*4)+2));
-				PORT->AFR[1] |= (1<<((PIN*4)+3));
+			PORT->AFR[1] |= (1<<(PIN*4));
+			PORT->AFR[1] &= ~(1<<((PIN*4)+1));
+			PORT->AFR[1] &= ~(1<<((PIN*4)+2));
+			PORT->AFR[1] |= (1<<((PIN*4)+3));
 			}
 	if(pin_alternate_function == AF10) {
-				PORT->AFR[1] &= ~(1<<(PIN*4));
-				PORT->AFR[1] |= (1<<((PIN*4)+1));
-				PORT->AFR[1] &= ~(1<<((PIN*4)+2));
-				PORT->AFR[1] |= (1<<((PIN*4)+3));
+			PORT->AFR[1] &= ~(1<<(PIN*4));
+			PORT->AFR[1] |= (1<<((PIN*4)+1));
+			PORT->AFR[1] &= ~(1<<((PIN*4)+2));
+			PORT->AFR[1] |= (1<<((PIN*4)+3));
 			}
 	if(pin_alternate_function == AF11) {
-				PORT->AFR[1] |= (1<<(PIN*4));
-				PORT->AFR[1] |= (1<<((PIN*4)+1));
-				PORT->AFR[1] &= ~(1<<((PIN*4)+2));
-				PORT->AFR[1] |= (1<<((PIN*4)+3));
+			PORT->AFR[1] |= (1<<(PIN*4));
+			PORT->AFR[1] |= (1<<((PIN*4)+1));
+			PORT->AFR[1] &= ~(1<<((PIN*4)+2));
+			PORT->AFR[1] |= (1<<((PIN*4)+3));
 			}
 	if(pin_alternate_function == AF12) {
-				PORT->AFR[1] &= ~(1<<(PIN*4));
-				PORT->AFR[1] &= ~(1<<((PIN*4)+1));
-				PORT->AFR[1] |= (1<<((PIN*4)+2));
-				PORT->AFR[1] |= (1<<((PIN*4)+3));
+			PORT->AFR[1] &= ~(1<<(PIN*4));
+			PORT->AFR[1] &= ~(1<<((PIN*4)+1));
+			PORT->AFR[1] |= (1<<((PIN*4)+2));
+			PORT->AFR[1] |= (1<<((PIN*4)+3));
 			}
 	if(pin_alternate_function == AF13) {
-				PORT->AFR[1] |= (1<<(PIN*4));
-				PORT->AFR[1] &= ~(1<<((PIN*4)+1));
-				PORT->AFR[1] |= (1<<((PIN*4)+2));
-				PORT->AFR[1] |= (1<<((PIN*4)+3));
+			PORT->AFR[1] |= (1<<(PIN*4));
+			PORT->AFR[1] &= ~(1<<((PIN*4)+1));
+			PORT->AFR[1] |= (1<<((PIN*4)+2));
+			PORT->AFR[1] |= (1<<((PIN*4)+3));
 			}
 	if(pin_alternate_function == AF14) {
-				PORT->AFR[1] &= ~(1<<(PIN*4));
-				PORT->AFR[1] |= (1<<((PIN*4)+1));
-				PORT->AFR[1] |= (1<<((PIN*4)+2));
-				PORT->AFR[1] |= (1<<((PIN*4)+3));
+			PORT->AFR[1] &= ~(1<<(PIN*4));
+			PORT->AFR[1] |= (1<<((PIN*4)+1));
+			PORT->AFR[1] |= (1<<((PIN*4)+2));
+			PORT->AFR[1] |= (1<<((PIN*4)+3));
 			}
 	if(pin_alternate_function == AF15) {
-				PORT->AFR[1] |= (1<<(PIN*4));
-				PORT->AFR[1] |= (1<<((PIN*4)+1));
-				PORT->AFR[1] |= (1<<((PIN*4)+2));
-				PORT->AFR[1] |= (1<<((PIN*4)+3));
+			PORT->AFR[1] |= (1<<(PIN*4));
+			PORT->AFR[1] |= (1<<((PIN*4)+1));
+			PORT->AFR[1] |= (1<<((PIN*4)+2));
+			PORT->AFR[1] |= (1<<((PIN*4)+3));
 			}
 
 }
+
+
 PWM::~PWM() {
 	// TODO Auto-generated destructor stub
 }

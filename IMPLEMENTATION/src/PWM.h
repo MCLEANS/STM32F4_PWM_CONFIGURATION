@@ -47,9 +47,10 @@ public:
 	uint16_t get_prescaler(void) const;
 	void set_auto_reload_value(uint16_t);
 	uint16_t get_auto_reload_value(void) const;
-	void set_duty_cycle(uint16_t);
+	void set_duty_cycle(uint16_t duty_cycle);
 	uint16_t get_duty_cycle(void) const;
 	void set_alternate_function(alternate_function pin_alternate_function);
+
 };
 
 } /* namespace custom_libraries */
