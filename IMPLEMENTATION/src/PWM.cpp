@@ -104,6 +104,7 @@ uint16_t PWM::get_duty_cycle(void) const{
 	return this->duty_cycle;
 }
 
+//Check from the micro-controller datasheet to find out the specific alternate function
 void PWM::set_alternate_function(alternate_function pin_alternate_function){
 	if(pin_alternate_function == AF0) {
 		PORT->AFR[0] &= ~(1<<(PIN*4));
@@ -206,7 +207,7 @@ void PWM::set_alternate_function(alternate_function pin_alternate_function){
 }
 
 void PWM::begin(){
-	//set to PWM Mode
+	//set to PWM Mode 1
 	if(input_channel == channel1){
 		TIMER->CCMR1 &= ~(TIM_CCMR1_OC1M_0);
 		TIMER->CCMR1 |= TIM_CCMR1_OC1M_1;
@@ -221,6 +222,7 @@ void PWM::begin(){
 		TIMER->CCMR1 &= ~(TIM_CCMR1_OC2M_0);
 		TIMER->CCMR1 |= TIM_CCMR1_OC2M_1;
 		TIMER->CCMR1 |= TIM_CCMR1_OC2M_2;
+		//Set output compare preload enable
 		TIMER->CCMR1 |= TIM_CCMR1_OC2PE;
 		//Enable capture/compare output
 		TIMER->CCER |= TIM_CCER_CC2E;
@@ -230,6 +232,7 @@ void PWM::begin(){
 		TIMER->CCMR2 &= ~(TIM_CCMR2_OC3M_0);
 		TIMER->CCMR2 |= TIM_CCMR2_OC3M_1;
 		TIMER->CCMR2 |= TIM_CCMR2_OC3M_2;
+		//Set output compare preload enable
 		TIMER->CCMR2 |= TIM_CCMR2_OC3PE;
 		//Enable capture/compare output
 		TIMER->CCER |= TIM_CCER_CC3E;
@@ -239,13 +242,11 @@ void PWM::begin(){
 		TIMER->CCMR2 &= ~(TIM_CCMR2_OC4M_0);
 		TIMER->CCMR2 |= TIM_CCMR2_OC4M_1;
 		TIMER->CCMR2 |= TIM_CCMR2_OC4M_2;
+		//Set output compare preload enable
 		TIMER->CCMR2 |= TIM_CCMR2_OC4PE;
 		//Enable capture/compare output
 		TIMER->CCER |= TIM_CCER_CC4E;
 	}
-
-
-
 
 	//set main Output Enable
 	TIMER->BDTR |= TIM_BDTR_MOE;
