@@ -41,7 +41,7 @@ public:
 public:
 
 public:
-	PWM(TIM_TypeDef *TIMER,channel input_channel, GPIO_TypeDef *PORT, uint8_t PIN, uint16_t prescaler = 0, uint16_t auto_reload_value = 0);
+	PWM(TIM_TypeDef *TIMER, GPIO_TypeDef *PORT, uint8_t PIN,channel input_channel, uint16_t prescaler = 0, uint16_t auto_reload_value = 0);
 	~PWM();
 	void set_prescaler(uint16_t);
 	uint16_t get_prescaler(void) const;

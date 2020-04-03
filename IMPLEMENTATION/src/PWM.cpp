@@ -10,14 +10,14 @@
 namespace custom_libraries {
 
 PWM::PWM(TIM_TypeDef *TIMER,
-		channel input_channel,
 		GPIO_TypeDef *PORT,
 		uint8_t PIN,
+		channel input_channel,
 		uint16_t prescaler,
 		uint16_t auto_reload_value ):TIMER(TIMER),
-									input_channel(input_channel),
 									PORT(PORT),
 									PIN(PIN),
+									input_channel(input_channel),
 									prescaler(prescaler),
 									auto_reload_value(auto_reload_value)
 										{
