@@ -13,11 +13,13 @@ PWM::PWM(TIM_TypeDef *TIMER,
 		GPIO_TypeDef *PORT,
 		uint8_t PIN,
 		channel input_channel,
+		alternate_function pin_function,
 		uint16_t prescaler,
 		uint16_t auto_reload_value ):TIMER(TIMER),
 									PORT(PORT),
 									PIN(PIN),
 									input_channel(input_channel),
+									pin_function(pin_function),
 									prescaler(prescaler),
 									auto_reload_value(auto_reload_value)
 										{
@@ -37,8 +39,7 @@ PWM::PWM(TIM_TypeDef *TIMER,
 	if(TIMER == TIM13) RCC->APB1ENR |= RCC_APB1ENR_TIM13EN;
 	if(TIMER == TIM14) RCC->APB1ENR |= RCC_APB1ENR_TIM14EN;
 
-	TIMER->PSC = this->prescaler;
-	TIMER->ARR = this-> auto_reload_value;
+
 
 	//Enable GPIO RCC
 	if(PORT == GPIOA) RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
@@ -51,9 +52,14 @@ PWM::PWM(TIM_TypeDef *TIMER,
 	if(PORT == GPIOH) RCC->AHB1ENR |= RCC_AHB1ENR_GPIOHEN;
 	if(PORT == GPIOI) RCC->AHB1ENR |= RCC_AHB1ENR_GPIOIEN;
 
-	//Set pin to Analog mode
-	PORT->MODER |= (1 << (PIN*2));
+	//Set pin to alternate function mode
+	PORT->MODER &= ~(1 << (PIN*2));
 	PORT->MODER |= (1 << ((PIN*2)+1));
+
+	set_alternate_function(pin_function);
+
+	TIMER->PSC = this->prescaler;
+	TIMER->ARR = this-> auto_reload_value;
 
 
 }
@@ -107,23 +113,50 @@ uint16_t PWM::get_duty_cycle(void) const{
 //Check from the micro-controller datasheet to find out the specific alternate function
 void PWM::set_alternate_function(alternate_function pin_alternate_function){
 	if(pin_alternate_function == AF0) {
-		PORT->AFR[0] &= ~(1<<(PIN*4));
-		PORT->AFR[0] &= ~(1<<((PIN*4)+1));
-		PORT->AFR[0] &= ~(1<<((PIN*4)+2));
-		PORT->AFR[0] &= ~(1<<((PIN*4)+3));
+		if(PIN < 8){
+			PORT->AFR[0] &= ~(1<<(PIN*4));
+			PORT->AFR[0] &= ~(1<<((PIN*4)+1));
+			PORT->AFR[0] &= ~(1<<((PIN*4)+2));
+			PORT->AFR[0] &= ~(1<<((PIN*4)+3));
+		}
+		else{
+			PORT->AFR[1] &= ~(1<<((PIN-8)*4));
+			PORT->AFR[1] &= ~(1<<(((PIN-8)*4)+1));
+			PORT->AFR[1] &= ~(1<<(((PIN-8)*4)+2));
+			PORT->AFR[1] &= ~(1<<(((PIN-8)*4)+3));
+		}
 	}
 
 	if(pin_alternate_function == AF1){
-		PORT->AFR[0] |= (1<<(PIN*4));
-		PORT->AFR[0] &= ~(1<<((PIN*4)+1));
-		PORT->AFR[0] &= ~(1<<((PIN*4)+2));
-		PORT->AFR[0] &= ~(1<<((PIN*4)+3));
+		if(PIN < 8){
+			PORT->AFR[0] |= (1<<(PIN*4));
+			PORT->AFR[0] &= ~(1<<((PIN*4)+1));
+			PORT->AFR[0] &= ~(1<<((PIN*4)+2));
+			PORT->AFR[0] &= ~(1<<((PIN*4)+3));
+		}
+		else{
+			PORT->AFR[1] |= (1<<((PIN-8)*4));
+			PORT->AFR[1] &= ~(1<<(((PIN-8)*4)+1));
+			PORT->AFR[1] &= ~(1<<(((PIN-8)*4)+2));
+			PORT->AFR[1] &= ~(1<<(((PIN-8)*4)+3));
+
+		}
 	}
 	if(pin_alternate_function == AF2){
-		PORT->AFR[0] &= ~(1<<(PIN*4));
-		PORT->AFR[0] |= (1<<((PIN*4)+1));
-		PORT->AFR[0] &= ~(1<<((PIN*4)+2));
-		PORT->AFR[0] &= ~(1<<((PIN*4)+3));
+
+		if(PIN < 8){
+			PORT->AFR[0] &= ~(1<<(PIN*4));
+			PORT->AFR[0] |= (1<<((PIN*4)+1));
+			PORT->AFR[0] &= ~(1<<((PIN*4)+2));
+			PORT->AFR[0] &= ~(1<<((PIN*4)+3));
+		}
+		else{
+			PORT->AFR[1] &= ~(1<<(PIN*4));
+			PORT->AFR[0] |= (1<<((PIN*4)+1));
+			PORT->AFR[0] &= ~(1<<((PIN*4)+2));
+			PORT->AFR[0] &= ~(1<<((PIN*4)+3));
+		}
+
 	}
 	if(pin_alternate_function == AF3) {
 			PORT->AFR[0] |= (1<<(PIN*4));
