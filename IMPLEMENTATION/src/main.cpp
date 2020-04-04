@@ -13,15 +13,11 @@
 #include "clockconfig.h"
 #include "PWM.h"
 			
-
-int duty_cycle = 50;
-
-custom_libraries::channel pwm_channel = custom_libraries::channel1;
-custom_libraries::alternate_function pin_alternate_function = custom_libraries::AF0;
-
 custom_libraries::clock_config system_clock;
 
-custom_libraries::PWM pwm(TIM1,GPIOA,8,pwm_channel,1000,100);
+custom_libraries::channel pwm_channel = custom_libraries::channel2;
+custom_libraries::alternate_function pin_alternate_function = custom_libraries::AF1;
+custom_libraries::PWM pwm(TIM1,GPIOA,9,pwm_channel,pin_alternate_function,1000,100);
 
 int main(void)
 {
@@ -29,7 +25,7 @@ int main(void)
 
 	//---------Configure PLL 168MHz as clock source-------------
 	system_clock.initialize();
-	pwm.set_duty_cycle(50);
+	pwm.set_duty_cycle(100);
 	pwm.begin();
 
 	/*
